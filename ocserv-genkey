@@ -6,46 +6,46 @@ mkdir -p /etc/pki/ocserv/public
 mkdir -p /etc/pki/ocserv/cacerts
 
 #generate CA certificate/key
-certtool --generate-privkey --outfile /etc/pki/ocserv/private/ca.key >/dev/null 2>&1
-echo "cn=$IP CA" >/etc/pki/ocserv/ca.tmpl
-echo "expiration_days=365" >>/etc/pki/ocserv/ca.tmpl
-echo "serial=1" >>/etc/pki/ocserv/ca.tmpl
-echo "ca" >>/etc/pki/ocserv/ca.tmpl
-echo "cert_signing_key" >>/etc/pki/ocserv/ca.tmpl
-echo "signing_key" >>/etc/pki/ocserv/ca.tmpl
-certtool --template /etc/pki/ocserv/ca.tmpl \
-        --generate-self-signed --load-privkey /etc/pki/ocserv/private/ca.key \
-        --outfile /etc/pki/ocserv/cacerts/ca.crt >/dev/null 2>&1
-#rm -f /etc/pki/ocserv/ca.tmpl
+certtool --generate-privkey --outfile /etc/pki/ocserv/private/`hostname`-ca.key >/dev/null 2>&1
+echo "cn=`hostname -f` CA" >/etc/pki/ocserv/`hostname`-ca.tmpl
+echo "expiration_days=365" >>/etc/pki/ocserv/`hostname`-ca.tmpl
+echo "serial=1" >>/etc/pki/ocserv/`hostname`-ca.tmpl
+echo "ca" >>/etc/pki/ocserv/`hostname`-ca.tmpl
+echo "cert_signing_key" >>/etc/pki/ocserv/`hostname`-ca.tmpl
+echo "signing_key" >>/etc/pki/ocserv/`hostname`-ca.tmpl
+certtool --template /etc/pki/ocserv/`hostname`-ca.tmpl \
+        --generate-self-signed --load-privkey /etc/pki/ocserv/private/`hostname`-ca.key \
+        --outfile /etc/pki/ocserv/cacerts/`hostname`-ca.crt >/dev/null 2>&1
+#rm -f /etc/pki/ocserv/`hostname`-ca.tmpl
 
 #generate server certificate/key
-certtool --generate-privkey --outfile /etc/pki/ocserv/private/server.key >/dev/null 2>&1
-echo "cn=$IP" >/etc/pki/ocserv/server.tmpl
-echo "serial=2" >>/etc/pki/ocserv/server.tmpl
-echo "expiration_days=365" >>/etc/pki/ocserv/server.tmpl
-echo "signing_key" >>/etc/pki/ocserv/server.tmpl
-echo "encryption_key" >>/etc/pki/ocserv/server.tmpl
-echo "tls_www_server" >>/etc/pki/ocserv/server.tmpl
-certtool --template /etc/pki/ocserv/server.tmpl \
-        --generate-certificate --load-privkey /etc/pki/ocserv/private/server.key \
-        --load-ca-certificate /etc/pki/ocserv/cacerts/ca.crt --load-ca-privkey \
-        /etc/pki/ocserv/private/ca.key --outfile /etc/pki/ocserv/public/server.crt >/dev/null 2>&1
-#rm -f /etc/pki/ocserv/server.tmpl
+certtool --generate-privkey --outfile /etc/pki/ocserv/private/`hostname`-server.key >/dev/null 2>&1
+echo "cn=`hostname -f`" >/etc/pki/ocserv/`hostname`-server.tmpl
+echo "serial=2" >>/etc/pki/ocserv/`hostname`-server.tmpl
+echo "expiration_days=365" >>/etc/pki/ocserv/`hostname`-server.tmpl
+echo "signing_key" >>/etc/pki/ocserv/`hostname`-server.tmpl
+echo "encryption_key" >>/etc/pki/ocserv/`hostname`-server.tmpl
+echo "tls_www_server" >>/etc/pki/ocserv/`hostname`-server.tmpl
+certtool --template /etc/pki/ocserv/`hostname`-server.tmpl \
+        --generate-certificate --load-privkey /etc/pki/ocserv/private/`hostname`-server.key \
+        --load-ca-certificate /etc/pki/ocserv/cacerts/`hostname`-ca.crt --load-ca-privkey \
+        /etc/pki/ocserv/private/`hostname`-ca.key --outfile /etc/pki/ocserv/public/`hostname`-server.crt >/dev/null 2>&1
+#rm -f /etc/pki/ocserv/`hostname`-server.tmpl
 
 #generate client certificate/key
-certtool --generate-privkey --outfile ./client.key >/dev/null 2>&1
-echo "cn=kt" >./client.tmpl
-echo "serial=3" >>./client.tmpl
-echo "expiration_days=365" >>./client.tmpl
-echo "signing_key" >>./client.tmpl
-echo "tls_www_client" >>./client.tmpl
-certtool --template ./client.tmpl \
-        --generate-certificate --load-privkey ./client.key \
-        --load-ca-certificate /etc/pki/ocserv/cacerts/ca.crt --load-ca-privkey \
-        /etc/pki/ocserv/private/ca.key --outfile ./client.crt >/dev/null 2>&1
-openssl pkcs12 -export -inkey ./client.key -in ./client.crt \
-        -certfile /etc/pki/ocserv/cacerts/ca.crt \
-        -name "kt VPN Client Cert" -out client.p12
-#rm -f ./client.tmpl
+certtool --generate-privkey --outfile ./`hostname`-client.key >/dev/null 2>&1
+echo "cn=kt@`hostname -f`" >./`hostname`-client.tmpl
+echo "serial=3" >>./`hostname`-client.tmpl
+echo "expiration_days=365" >>./`hostname`-client.tmpl
+echo "signing_key" >>./`hostname`-client.tmpl
+echo "tls_www_client" >>./`hostname`-client.tmpl
+certtool --template ./`hostname`-client.tmpl \
+        --generate-certificate --load-privkey ./`hostname`-client.key \
+        --load-ca-certificate /etc/pki/ocserv/cacerts/`hostname`-ca.crt --load-ca-privkey \
+        /etc/pki/ocserv/private/`hostname`-ca.key --outfile ./`hostname`-client.crt >/dev/null 2>&1
+openssl pkcs12 -export -inkey ./`hostname`-client.key -in ./`hostname`-client.crt \
+        -certfile /etc/pki/ocserv/cacerts/`hostname`-ca.crt \
+        -name "kt VPN Client Cert" -out `hostname`-client.p12
+#rm -f ./`hostname`-client.tmpl
 
 exit 0
