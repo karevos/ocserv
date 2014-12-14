@@ -35,6 +35,8 @@ certtool --template /etc/pki/ocserv/server.tmpl \
 #rm -f /etc/pki/ocserv/server.tmpl
 
 #generate client certificate/key
+mkdir -p /etc/ocserv/keys
+pushd /etc/ocserv/keys
 certtool --generate-privkey --outfile ./client.key
 echo "cn=kt" >./client.tmpl
 echo "serial=3" >>./client.tmpl
@@ -49,5 +51,6 @@ openssl pkcs12 -export -inkey ./client.key -in ./client.crt \
         -certfile /etc/pki/ocserv/cacerts/ca.crt \
         -name "kt VPN Client Cert" -out client.p12
 #rm -f ./client.tmpl
+popd
 
 exit 0
