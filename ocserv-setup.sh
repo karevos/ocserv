@@ -51,11 +51,12 @@ useradd -b /var/lib -u 998 -s /sbin/nologin -U ocserv
 
 
 ####
-# 配置环境变量
+# 配置环境和启动项
 ####
 
 echo "export LD_LIBRARY_PATH=/opt/lib/:/opt/lib64/">> /etc/rc.local
 echo "export PATH=$PATH:/opt/sbin:/opt/bin">> /etc/rc.local
+echo "/opt/sbin/ocserv -c /etc/ocserv/ocserv.conf">> /etc/rc.local
 source /etc/rc.local
 echo "export LD_LIBRARY_PATH=/opt/lib/:/opt/lib64/">> /etc/profile.d/export.sh
 echo "export PATH=$PATH:/opt/sbin:/opt/bin">> /etc/profile.d/export.sh
@@ -64,7 +65,7 @@ source /etc/rc.local
 
 
 ####
-# 下载证书生成文件
+# 生成证书
 ####
 
 rm -f /opt/sbin/ocserv-genkey
@@ -72,6 +73,7 @@ pushd /opt/sbin
 wget https://raw.githubusercontent.com/karevos/ocserv/master/ocserv-genkey
 chmod a+x ocserv-genkey
 popd
+ocserv-genkey
 
 
 
