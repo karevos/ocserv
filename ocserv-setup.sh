@@ -65,6 +65,18 @@ source /etc/rc.local
 
 
 ####
+# 下载配置文件
+####
+
+rm -rf  /etc/ocserv
+mkdir /etc/ocserv
+pushd /etc/ocserv
+wget https://raw.githubusercontent.com/karevos/ocserv/master/ocserv.conf
+popd
+
+
+
+####
 # 生成证书
 ####
 
@@ -75,17 +87,6 @@ chmod a+x ocserv-genkey
 popd
 ocserv-genkey
 
-
-
-####
-# 下载配置文件
-####
-
-rm -rf  /etc/ocserv
-mkdir /etc/ocserv
-pushd /etc/ocserv
-wget https://raw.githubusercontent.com/karevos/ocserv/master/ocserv.conf
-popd
 
 
 exit 0
