@@ -6,7 +6,6 @@
 
 yum install -y http://mirror.umd.edu/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
 yum install -y autoconf automake gcc gmp-devel bison flex  pcre-devel tar net-tools  openssl openssl-devel curl-devel bind-utils  libtasn1-devel zlib zlib-devel trousers trousers-devel gmp-devel gmp xz texinfo libnl-devel libnl tcp_wrappers-libs tcp_wrappers-devel tcp_wrappers dbus dbus-devel ncurses-devel pam pam-devel readline-devel bison bison-devel flex gcc automake autoconf wget expat-devel unbound
-yum erase -y gnutls
 
 
 
